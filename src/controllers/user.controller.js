@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-
+import path from "path"
 const registerUser = asyncHandler(async (req,res) => { 
     // user details from frontend
     // validate krna - not empty
@@ -20,6 +20,9 @@ const registerUser = asyncHandler(async (req,res) => {
     const {username,fullName,email,password}  = req.body
     console.log("usernme: ",username)
     console.log("email: ",email)
+    // console.log(req)
+    // console.log("Above was req UPar")
+    // console.log(req.files)
     // if (fullName == ""){
     //     throw new ApiError(400,"FUll Name is required")
     // } Basic Method
@@ -29,7 +32,7 @@ const registerUser = asyncHandler(async (req,res) => {
     {
         throw new ApiError(400,"All fields are neccessary")
     }
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
             $or: [{username},{email}]
         })  
     if (existedUser)
@@ -37,7 +40,12 @@ const registerUser = asyncHandler(async (req,res) => {
         throw new ApiError(409 , "Username or email already exists")
     }
     const avatarLocalPath = req.files?.avatar[0]?.path
-    const coverImageLocalPath = req.files?.coverImage[0]?.path
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+
     if(!avatarLocalPath){
         throw new ApiError(404,"Avatar file is required")
     }
