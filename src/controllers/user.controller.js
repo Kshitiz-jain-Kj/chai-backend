@@ -231,7 +231,7 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
         },
         {new: true}
     ).select("-password")
-    await user.save({validateBeforeSave: false})
+    // await user.save({validateBeforeSave: false})
     return res.status(200).json(new ApiResponse(
         200,
         user,
@@ -254,7 +254,7 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
         },
         {new: true}
     ).select("-password")
-    await user.save({validateBeforeSave: false})
+    // await user.save({validateBeforeSave: false})
     return res.status(200).json(new ApiResponse(
         200,
         user,
